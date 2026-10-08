@@ -1,11 +1,12 @@
 'use client';
 
 /* ------------------------------------------------------------------ */
-/* Sticky site header shell                                            */
+/* Sticky site header: logo · search · account/wishlist/cart            */
 /* ------------------------------------------------------------------ */
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/brand/Logo';
 import { SearchBar } from './SearchBar';
@@ -36,19 +37,27 @@ export function Header({
       )}
     >
       <div className="shell">
-        <div className="flex h-16 items-center gap-3 lg:h-[74px] lg:gap-8">
-          <HeaderActions onOpenCart={onOpenCart} onOpenMobileNav={onOpenMobileNav} />
-          <Logo className="shrink-0" />
-          <SearchBar className="hidden max-w-2xl flex-1 md:block" key={`d-${pathname}`} />
-          <div className="ml-auto hidden lg:block">
-            <a
-              href="#footer-help"
-              className="text-[13px] font-semibold text-ink transition-colors hover:text-forest"
-            >
-              Help
-            </a>
-          </div>
+        <div className="flex h-16 items-center gap-2 sm:gap-4 lg:h-[74px] lg:gap-6">
+          {/* Mobile: hamburger lives left of the logo */}
+          <button
+            type="button"
+            onClick={onOpenMobileNav}
+            aria-label="Open menu"
+            className="-ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-md text-forest transition hover:bg-cream md:hidden"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+
+          <Logo className="shrink-0" showTagline />
+
+          {/* Center: large search (desktop / tablet) */}
+          <SearchBar className="mx-auto hidden max-w-2xl flex-1 md:block" key={`d-${pathname}`} />
+
+          {/* Right: account · wishlist · cart */}
+          <HeaderActions onOpenCart={onOpenCart} className="ml-auto md:ml-0" />
         </div>
+
+        {/* Mobile: search on its own row */}
         <div className="pb-3 md:hidden">
           <SearchBar key={`m-${pathname}`} />
         </div>

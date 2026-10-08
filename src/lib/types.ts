@@ -284,6 +284,10 @@ export interface HeroSlide {
   secondary: { label: string; href: string };
   image: string;
   tone: 'dark' | 'light';
+  /** Hex background tint for the split hero layout. */
+  bg?: string;
+  /** Compact dark-green promotional panel shown top-right of the hero. */
+  sale?: { kicker: string; upTo?: string; percent: string; suffix?: string };
 }
 
 export interface NotificationItem {

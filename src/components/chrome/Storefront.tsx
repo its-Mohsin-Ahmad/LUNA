@@ -6,7 +6,6 @@
 
 import { useState, type ReactNode } from 'react';
 import { Providers } from '@/lib/store';
-import { AnnouncementBar } from './AnnouncementBar';
 import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
@@ -24,7 +23,6 @@ function StorefrontFrame({ children }: { children: ReactNode }) {
         Skip to content
       </a>
 
-      <AnnouncementBar />
       <Header onOpenCart={() => setCartOpen(true)} onOpenMobileNav={() => setNavOpen(true)} />
       <Navigation />
 

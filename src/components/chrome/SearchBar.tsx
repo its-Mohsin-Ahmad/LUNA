@@ -9,6 +9,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Search, X, ArrowRight } from 'lucide-react';
 import { searchProducts } from '@/lib/data/products';
+import { BRANDS } from '@/lib/data/products/brands';
 import { usePrefs } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import { SmartImage } from '@/components/ui/SmartImage';
@@ -32,7 +33,13 @@ export function SearchBar({
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const results = query.trim().length >= 2 ? searchProducts(query, 6) : [];
+  const cleanQuery = query.trim();
+  const results = cleanQuery.length >= 2 ? searchProducts(cleanQuery, 6) : [];
+  const brandHits =
+    cleanQuery.length >= 2
+      ? BRANDS.filter((b) => b.name.toLowerCase().includes(cleanQuery.toLowerCase())).slice(0, 4)
+      : [];
+  const hasHits = results.length > 0 || brandHits.length > 0;
 
   useEffect(() => {
     const onClickOutside = (e: MouseEvent) => {
@@ -89,7 +96,7 @@ export function SearchBar({
     }
   };
 
-  const showPanel = open && (results.length > 0 || query.length < 2);
+  const showPanel = open && (hasHits || cleanQuery.length < 2);
 
   return (
     <div ref={wrapRef} className={cn('relative', className)}>
@@ -114,10 +121,10 @@ export function SearchBar({
           }}
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
-          placeholder="Search for products, brands and categories"
-          className="h-11 w-full rounded-md border border-line bg-warm pl-11 pr-20 text-sm text-ink placeholder:text-muted focus:border-forest focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest/15"
+          placeholder="Search products, brands and more..."
+          className="h-11 w-full rounded-md border border-transparent bg-mist pl-11 pr-14 text-sm text-ink placeholder:text-muted focus:border-forest focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest/15"
         />
-        {query ? (
+        {query && (
           <button
             type="button"
             onClick={() => {
@@ -125,15 +132,19 @@ export function SearchBar({
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="absolute right-10 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded text-muted transition hover:bg-cream hover:text-ink"
+            className="absolute right-12 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded text-muted transition hover:bg-cream hover:text-ink"
           >
             <X className="h-3.5 w-3.5" />
           </button>
-        ) : (
-          <kbd className="pointer-events-none absolute right-3 top-1/2 hidden -translate-y-1/2 rounded border border-line bg-white px-1.5 py-0.5 text-[10px] font-semibold text-muted lg:block">
-            ⌘K
-          </kbd>
         )}
+        <button
+          type="button"
+          onClick={() => go(query)}
+          aria-label="Search"
+          className="absolute right-1.5 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-forest text-white transition hover:bg-forest-600"
+        >
+          <Search className="h-4 w-4" />
+        </button>
       </div>
       {showPanel && (
         <div
@@ -141,11 +152,13 @@ export function SearchBar({
           role="listbox"
           className="absolute inset-x-0 top-[calc(100%+8px)] z-50 max-h-[70vh] overflow-y-auto rounded-xl border border-line bg-white shadow-card-hover animate-fadeUp"
         >
-          {results.length > 0 ? (
+          {hasHits ? (
             <div className="py-1.5">
-              <p className="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
-                Products
-              </p>
+              {results.length > 0 && (
+                <>
+                  <p className="px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+                    Products
+                  </p>
               {results.map((p, i) => (
                 <Link
                   key={p.id}
@@ -178,6 +191,36 @@ export function SearchBar({
                   <Price amount={p.price} size="sm" />
                 </Link>
               ))}
+                </>
+              )}
+              {brandHits.length > 0 && (
+                <>
+                  <p className="px-4 pb-1.5 pt-2 text-[10px] font-bold uppercase tracking-[0.16em] text-muted">
+                    Brands
+                  </p>
+                  {brandHits.map((b) => (
+                    <Link
+                      key={b.id}
+                      href={`/brand/${b.slug}`}
+                      role="option"
+                      onClick={() => {
+                        setOpen(false);
+                        onNavigate?.();
+                      }}
+                      className="flex items-center gap-3 px-4 py-2.5 transition hover:bg-cream/60"
+                    >
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-cream text-[11px] font-bold text-forest">
+                        {b.initials}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-medium text-ink">{b.name}</span>
+                        <span className="block text-xs text-muted">{b.category} · {b.country}</span>
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5 text-muted" />
+                    </Link>
+                  ))}
+                </>
+              )}
               <button
                 type="button"
                 onClick={() => go(query)}
@@ -187,7 +230,7 @@ export function SearchBar({
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>
-          ) : query.length >= 2 ? (
+          ) : cleanQuery.length >= 2 ? (
             <div className="px-4 py-8 text-center">
               <p className="text-sm font-semibold text-ink">No matches for “{query}”</p>
               <p className="mt-1 text-xs text-muted">Try a category, a brand or a shorter term.</p>

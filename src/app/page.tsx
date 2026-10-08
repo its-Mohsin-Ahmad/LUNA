@@ -5,7 +5,7 @@ import { CategoryRail } from '@/components/home/CategoryRail';
 import { ProductCarousel } from '@/components/home/ProductCarousel';
 import { FlashSale } from '@/components/home/FlashSale';
 import { PopularCategories } from '@/components/home/PopularCategories';
-import { PromoCards, BrandStrip, TestimonialSection, TrustBar } from '@/components/home/homeSections';
+import { PromoCards, BrandStrip, TestimonialSection, HomeNewsletter, TrustBar } from '@/components/home/homeSections';
 import { HERO_SLIDES } from '@/lib/data/content';
 import {
   getFeatured,
@@ -87,6 +87,7 @@ export default function HomePage() {
         tone="white"
       />
       <TestimonialSection />
+      <HomeNewsletter />
       <TrustBar />
     </Storefront>
   );

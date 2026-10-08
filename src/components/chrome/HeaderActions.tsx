@@ -10,7 +10,6 @@ import {
   Heart,
   ShoppingBag,
   User as UserIcon,
-  Menu,
   LayoutDashboard,
   LogOut,
   Package,
@@ -43,11 +42,9 @@ function AccountMenuLink({
 
 export function HeaderActions({
   onOpenCart,
-  onOpenMobileNav,
   className,
 }: {
   onOpenCart: () => void;
-  onOpenMobileNav?: () => void;
   className?: string;
 }) {
   const { totals } = useCart();
@@ -74,41 +71,30 @@ export function HeaderActions({
   const dashboardHref = user ? `/dashboard/${user.role.toLowerCase()}` : '/login';
 
   return (
-    <div className={cn('flex items-center gap-1 sm:gap-1.5', className)}>
-      {onOpenMobileNav && (
-        <button
-          type="button"
-          onClick={onOpenMobileNav}
-          aria-label="Open menu"
-          className="grid h-10 w-10 place-items-center rounded-md text-forest transition hover:bg-cream lg:hidden"
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-      )}
-
+    <div className={cn('flex items-center gap-0.5 sm:gap-1.5', className)}>
       <div className="relative" ref={menuRef}>
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
           aria-expanded={menuOpen}
           aria-haspopup="menu"
-          className="flex h-10 items-center gap-2 rounded-md px-2 text-forest transition hover:bg-cream"
+          aria-label="Account menu"
+          className="flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-forest transition hover:bg-cream"
         >
-          {user ? (
-            <SmartImage
-              src={user.avatar}
-              alt={user.name}
-              seed={user.id}
-              aspect="square"
-              wrapperClassName="h-7 w-7 rounded-full"
-            />
-          ) : (
-            <UserIcon className="h-5 w-5" />
-          )}
-          <span className="hidden text-sm font-semibold lg:inline">
-            {user ? user.name.split(' ')[0] : 'Sign in'}
+          <span className="grid h-6 w-6 place-items-center">
+            {user ? (
+              <SmartImage
+                src={user.avatar}
+                alt={user.name}
+                seed={user.id}
+                aspect="square"
+                wrapperClassName="h-6 w-6 rounded-full"
+              />
+            ) : (
+              <UserIcon className="h-[21px] w-[21px]" />
+            )}
           </span>
-          <ChevronDown className="hidden h-3.5 w-3.5 lg:inline" />
+          <span className="text-[10.5px] font-semibold leading-none">Account</span>
         </button>
         {menuOpen && (
           <div
@@ -175,31 +161,30 @@ export function HeaderActions({
       <Link
         href="/wishlist"
         aria-label={`Wishlist, ${wishlist.length} items`}
-        className="relative grid h-10 w-10 place-items-center rounded-md text-forest transition hover:bg-cream"
+        className="relative flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-forest transition hover:bg-cream"
       >
-        <Heart className="h-5 w-5" />
-        {wishlist.length > 0 && (
-          <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-sale px-1 text-[10px] font-bold text-white">
+        <span className="relative grid h-6 w-6 place-items-center">
+          <Heart className="h-[21px] w-[21px]" />
+          <span className="absolute -right-1.5 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-forest px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white">
             {wishlist.length > 9 ? '9+' : wishlist.length}
           </span>
-        )}
+        </span>
+        <span className="text-[10.5px] font-semibold leading-none">Wishlist</span>
       </Link>
 
       <button
         type="button"
         onClick={onOpenCart}
-        aria-label={`Shopping bag, ${totals.itemCount} items, ${formatMoney(totals.total, currency)}`}
-        className="relative flex h-10 items-center gap-2 rounded-md px-2 text-forest transition hover:bg-cream"
+        aria-label={`Cart, ${totals.itemCount} items, ${formatMoney(totals.total, currency)}`}
+        className="relative flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-forest transition hover:bg-cream"
       >
-        <ShoppingBag className="h-5 w-5" />
-        <span className="hidden text-sm font-semibold tabular-nums xl:inline">
-          {formatMoney(totals.total, currency)}
-        </span>
-        {totals.itemCount > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-forest px-1 text-[10px] font-bold text-white">
+        <span className="relative grid h-6 w-6 place-items-center">
+          <ShoppingBag className="h-[21px] w-[21px]" />
+          <span className="absolute -right-1.5 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white">
             {totals.itemCount > 99 ? '99+' : totals.itemCount}
           </span>
-        )}
+        </span>
+        <span className="text-[10.5px] font-semibold leading-none">Cart</span>
       </button>
     </div>
   );

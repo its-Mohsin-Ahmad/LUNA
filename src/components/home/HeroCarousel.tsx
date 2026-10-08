@@ -1,26 +1,33 @@
 'use client';
 
 /* ------------------------------------------------------------------ */
-/* Hero carousel                                                       */
-/*                                                                     */
-/* 6 slides in a ~300px rounded banner: autoplay with pause-on-hover,  */
-/* arrows, dots, keyboard, touch swipe and reduced-motion support.      */
+/* Hero carousel — split layout matching the reference homepage:        */
+/* serif heading + CTA + trust badges on the left, product imagery on   */
+/* the right, compact dark-green sale panel top-right.                  */
+/* Autoplay (5s) with pause-on-hover, arrows, dots, keyboard, pointer    */
+/* drag, touch swipe and reduced-motion support.                        */
 /* ------------------------------------------------------------------ */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, ShieldCheck, Tag, Users } from 'lucide-react';
 import type { HeroSlide } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { SmartImage } from '@/components/ui/SmartImage';
 
-const AUTOPLAY_MS = 6000;
+const AUTOPLAY_MS = 5000;
+
+const HERO_TRUST = [
+  { icon: ShieldCheck, label: 'Premium Quality' },
+  { icon: Tag, label: 'Great Prices' },
+  { icon: Users, label: 'Trusted by 10K+ Customers' },
+] as const;
 
 export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [announce, setAnnounce] = useState('');
-  const touchStart = useRef<number | null>(null);
+  const dragStart = useRef<number | null>(null);
 
   const count = slides.length;
 
@@ -59,10 +66,14 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
     }
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStart.current === null) return;
-    const delta = e.changedTouches[0].clientX - touchStart.current;
-    touchStart.current = null;
+  /* Mouse drag + touch swipe via pointer events */
+  const onPointerDown = (e: React.PointerEvent) => {
+    dragStart.current = e.clientX;
+  };
+  const onPointerUp = (e: React.PointerEvent) => {
+    if (dragStart.current === null) return;
+    const delta = e.clientX - dragStart.current;
+    dragStart.current = null;
     if (Math.abs(delta) > 45) {
       if (delta < 0) next();
       else prev();
@@ -82,16 +93,14 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      onTouchStart={(e) => {
-        touchStart.current = e.touches[0].clientX;
-      }}
-      onTouchEnd={handleTouchEnd}
-      className="relative isolate overflow-hidden rounded-[18px] bg-forest sm:rounded-[22px]"
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      className="relative isolate overflow-hidden rounded-[18px] sm:rounded-[22px]"
+      style={{ background: slide.bg ?? '#E7EFE6' }}
     >
-      <div className="relative h-[260px] w-full sm:h-[290px] lg:h-[310px]">
+      <div className="relative h-[400px] w-full transition-colors duration-500 sm:h-[290px] lg:h-[306px]">
         {slides.map((s, i) => {
           const isActive = i === index;
-          const light = s.tone === 'light';
           return (
             <div
               key={s.id}
@@ -100,82 +109,88 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               aria-label={`${i + 1} of ${count}`}
               aria-hidden={!isActive}
               className={cn(
-                'absolute inset-0 transition-opacity duration-700 ease-out',
+                'absolute inset-0 transition-opacity duration-500 ease-out',
                 isActive ? 'opacity-100' : 'pointer-events-none opacity-0'
               )}
             >
-              <SmartImage
-                src={s.image}
-                alt=""
-                seed={s.id}
-                aspect="auto"
-                priority={i === 0}
-                className={cn(
-                  'h-full w-full object-cover transition-transform duration-[6000ms] ease-linear',
-                  isActive ? 'scale-105' : 'scale-100'
-                )}
-              />
-              <div className={cn('absolute inset-0 hero-veil', light && 'opacity-55')} />
-              <div className="absolute inset-0 flex items-center">
-                <div className="shell">
-                  <div className="max-w-xl">
-                    <p
-                      className={cn(
-                        'text-[11px] font-bold uppercase tracking-[0.2em]',
-                        light ? 'text-forest-700' : 'text-forest-300'
-                      )}
+              <div
+                className="grid h-full grid-cols-1 grid-rows-[1fr_136px] sm:grid-cols-[1.05fr_1fr] sm:grid-rows-1"
+                style={{ background: s.bg }}
+              >
+                {/* LEFT — copy */}
+                <div className="relative z-10 flex flex-col justify-center px-6 pb-4 pt-7 sm:px-8 sm:py-6 lg:px-10">
+                  <h2 className="display max-w-[250px] text-[34px] leading-[1.06] text-forest sm:max-w-[290px] sm:text-[37px] lg:max-w-[330px] lg:text-[44px]">
+                    {s.title}
+                  </h2>
+                  <p className="mt-3 max-w-[42ch] text-[13px] leading-relaxed text-ink/75 sm:text-[14px]">
+                    {s.copy}
+                  </p>
+                  <div className="mt-4">
+                    <Link
+                      href={s.cta.href}
+                      tabIndex={isActive ? 0 : -1}
+                      className="inline-flex h-10 items-center gap-2 rounded-md bg-forest px-5 text-sm font-semibold text-white transition hover:bg-forest-600"
                     >
-                      {s.eyebrow}
-                    </p>
-                    <h1
-                      className={cn(
-                        'display mt-2 text-[28px] leading-[1.1] sm:text-[38px] lg:text-[44px]',
-                        light ? 'text-forest-900' : 'text-cream'
-                      )}
-                    >
-                      {s.title}
-                    </h1>
-                    <p
-                      className={cn(
-                        'clamp-2 mt-3 max-w-lg text-[13px] leading-relaxed sm:text-[15px]',
-                        light ? 'text-forest-800/85' : 'text-cream/80'
-                      )}
-                    >
-                      {s.copy}
-                    </p>
-                    <div className="mt-5 flex flex-wrap gap-2.5">
-                      <Link
-                        href={s.cta.href}
-                        tabIndex={isActive ? 0 : -1}
-                        className={cn(
-                          'inline-flex h-11 items-center rounded-md px-5 text-sm font-semibold transition',
-                          light
-                            ? 'bg-forest text-white hover:bg-forest-600'
-                            : 'bg-cream text-forest hover:bg-white'
-                        )}
-                      >
-                        {s.cta.label}
-                      </Link>
-                      <Link
-                        href={s.secondary.href}
-                        tabIndex={isActive ? 0 : -1}
-                        className={cn(
-                          'inline-flex h-11 items-center rounded-md border px-5 text-sm font-semibold transition',
-                          light
-                            ? 'border-forest/30 text-forest hover:bg-forest hover:text-white'
-                            : 'border-cream/40 text-cream hover:bg-cream/15'
-                        )}
-                      >
-                        {s.secondary.label}
-                      </Link>
-                    </div>
+                      {s.cta.label}
+                      <ArrowRight className="h-4 w-4" aria-hidden />
+                    </Link>
                   </div>
+
+                  {/* Trust badges */}
+                  <ul className="mt-5 hidden flex-wrap items-center gap-x-6 gap-y-2 sm:flex">
+                    {HERO_TRUST.map((t) => {
+                      const Icon = t.icon;
+                      return (
+                        <li key={t.label} className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 shrink-0 text-forest/70" aria-hidden />
+                          <span className="max-w-[110px] text-[11.5px] font-medium leading-tight text-ink/80">
+                            {t.label}
+                          </span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+                {/* RIGHT — product imagery */}
+                <div className="relative min-h-0">
+                  <SmartImage
+                    src={s.image}
+                    alt=""
+                    seed={s.id}
+                    aspect="auto"
+                    priority={i === 0}
+                    wrapperClassName="absolute inset-0 h-full w-full"
+                    className="object-cover"
+                  />
                 </div>
               </div>
+
+              {/* Compact sale panel — upper right */}
+              {s.sale && (
+                <div className="absolute right-3.5 top-3.5 z-20 w-[94px] rounded-xl bg-forest px-2.5 py-3 text-center text-cream shadow-soft sm:right-5 sm:top-5 sm:w-[106px]">
+                  <p className="display text-[15px] uppercase leading-[1.1] tracking-wide text-cream sm:text-[17px]">
+                    {s.sale.kicker}
+                  </p>
+                  {s.sale.upTo && (
+                    <p className="mt-1.5 text-[9px] font-bold tracking-[0.18em] text-cream/70">
+                      {s.sale.upTo}
+                    </p>
+                  )}
+                  <p className="display text-[26px] leading-none text-gold sm:text-[30px]">
+                    {s.sale.percent}
+                  </p>
+                  {s.sale.suffix && (
+                    <p className="mt-0.5 text-[10px] font-bold tracking-[0.2em] text-cream/80">
+                      {s.sale.suffix}
+                    </p>
+                  )}
+                </div>
+              )}
             </div>
           );
         })}
       </div>
+
       <button
         type="button"
         onClick={prev}
@@ -193,8 +208,8 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
         <ChevronRight className="h-5 w-5" />
       </button>
 
-      <div className="absolute bottom-3.5 left-0 right-0 flex items-center justify-center">
-        <div className="flex items-center gap-1.5 rounded-full bg-ink/30 px-2.5 py-1.5 backdrop-blur-sm">
+      <div className="absolute bottom-3 left-0 right-0 z-20 flex items-center justify-center">
+        <div className="flex items-center gap-1.5">
           {slides.map((s, i) => (
             <button
               key={s.id}
@@ -204,30 +219,17 @@ export function HeroCarousel({ slides }: { slides: HeroSlide[] }) {
               aria-current={i === index}
               className={cn(
                 'h-1.5 rounded-full transition-all duration-300',
-                i === index ? 'w-6 bg-cream' : 'w-1.5 bg-cream/50 hover:bg-cream/80'
+                i === index ? 'w-5 bg-forest' : 'w-1.5 bg-forest/30 hover:bg-forest/55'
               )}
             />
           ))}
-          <button
-            type="button"
-            onClick={() => setPaused((p) => !p)}
-            aria-label={paused ? 'Resume slideshow' : 'Pause slideshow'}
-            className="ml-1 grid h-5 w-5 place-items-center rounded-full text-cream/70 transition hover:text-cream"
-          >
-            {paused ? <Play className="h-3 w-3" /> : <Pause className="h-3 w-3" />}
-          </button>
         </div>
       </div>
 
-      <div className="absolute inset-x-0 bottom-0 h-0.5 bg-white/10">
-        <div
-          key={`${index}-${paused}`}
-          className={cn('h-full origin-left bg-gold', paused ? '' : 'progress-fill')}
-        />
-      </div>
       <p aria-live="polite" className="sr-only">
         {announce}
       </p>
     </section>
   );
 }
+

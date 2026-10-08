@@ -5,11 +5,10 @@
 /* ------------------------------------------------------------------ */
 
 import Link from 'next/link';
-import { Facebook, Instagram, Youtube, Linkedin, Mail, Phone, MapPin, ShieldCheck } from 'lucide-react';
+import { Facebook, Instagram, Youtube, Linkedin, Mail, Phone, MapPin, ShieldCheck, Apple, Play } from 'lucide-react';
 import { SITE } from '@/lib/constants';
 import { CATEGORIES } from '@/lib/data/categories';
 import { Logo } from '@/components/brand/Logo';
-import { NewsletterForm } from './NewsletterForm';
 import { FOOTER_COLUMNS, PAYMENT_METHODS, LEGAL_LINKS } from './footerLinks';
 
 const SOCIAL_ICONS = [
@@ -21,24 +20,9 @@ const SOCIAL_ICONS = [
 
 export function Footer() {
   return (
-    <footer className="mt-20 bg-ink text-cream">
-      <div className="border-b border-white/10 bg-forest-900">
-        <div className="shell grid gap-8 py-12 lg:grid-cols-2 lg:items-center lg:py-14">
-          <div className="space-y-3">
-            <h2 className="display text-[26px] leading-tight text-cream sm:text-[30px]">
-              Ten percent off your first order
-            </h2>
-            <p className="max-w-md text-sm leading-relaxed text-cream/70">
-              Join the LUNA list for early access to drops, members-only pricing and a welcome
-              code. No noise, unsubscribe in one click.
-            </p>
-          </div>
-          <NewsletterForm />
-        </div>
-      </div>
-
-      <div className="shell grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-6 lg:py-16">
-        <div className="lg:col-span-2">
+    <footer className="mt-20 bg-forest text-cream">
+      <div className="shell grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-5 lg:py-16">
+        <div>
           <Logo tone="light" />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-cream/60">
             LUNA is an independent marketplace for considered goods — from audio and homeware to
@@ -75,6 +59,27 @@ export function Footer() {
                 <Icon className="h-4 w-4" />
               </a>
             ))}
+          </div>
+          <div className="mt-6">
+            <h3 className="text-[11px] font-bold uppercase tracking-[0.16em] text-cream/50">
+              Get the LUNA app
+            </h3>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <a
+                href="/app/ios"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-cream/85 transition hover:border-forest-300 hover:bg-forest-700 hover:text-cream"
+              >
+                <Apple className="h-4 w-4" />
+                App Store
+              </a>
+              <a
+                href="/app/android"
+                className="inline-flex items-center gap-2 rounded-lg border border-white/15 px-3 py-2 text-xs font-semibold text-cream/85 transition hover:border-forest-300 hover:bg-forest-700 hover:text-cream"
+              >
+                <Play className="h-4 w-4" />
+                Google Play
+              </a>
+            </div>
           </div>
         </div>
 
@@ -135,6 +140,23 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="shell flex flex-col items-center justify-between gap-3 py-5 text-xs text-cream/45 sm:flex-row">
           <p>© {SITE.foundedYear}–2026 LUNA Marketplace. All rights reserved.</p>
+          <label className="flex items-center gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-[0.16em] text-cream/50">
+              Ship to
+            </span>
+            <select
+              aria-label="Ship to country"
+              defaultValue="US"
+              className="rounded border border-white/15 bg-transparent px-2 py-1 text-xs text-cream/80 focus:border-forest-300 focus:outline-none"
+            >
+              <option value="US">United States</option>
+              <option value="AE">United Arab Emirates</option>
+              <option value="PK">Pakistan</option>
+              <option value="IN">India</option>
+              <option value="GB">United Kingdom</option>
+              <option value="DE">Germany</option>
+            </select>
+          </label>
           <ul className="flex flex-wrap items-center gap-4">
             {LEGAL_LINKS.map((link) => (
               <li key={link.href}>
