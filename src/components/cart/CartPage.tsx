@@ -45,7 +45,7 @@ export function CartPage() {
   }
 
   return (
-    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+    <div className="grid gap-8 pb-24 lg:grid-cols-[minmax(0,1fr)_360px] lg:pb-0">
       <div className="space-y-4">
         <div className="flex items-center justify-between gap-3">
           <h2 className="display text-xl text-forest">
@@ -92,6 +92,27 @@ export function CartPage() {
         onSubmitCoupon={submitCoupon}
         onRemoveCoupon={removeCoupon}
       />
+
+      {/* Sticky mobile checkout bar — sits directly above the bottom nav. */}
+      <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-30 border-t border-line bg-white/97 px-4 py-3 shadow-[0_-4px_16px_rgba(0,0,0,0.06)] backdrop-blur lg:hidden">
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            <p className="text-[10.5px] font-bold uppercase tracking-[0.14em] text-muted">
+              Total · {totals.itemCount} item{totals.itemCount === 1 ? '' : 's'}
+            </p>
+            <p className="text-[17px] font-bold tabular-nums leading-tight text-ink">
+              {formatMoney(totals.total, currency)}
+            </p>
+          </div>
+          <Link
+            href="/checkout"
+            className="tap-squish inline-flex h-12 flex-1 items-center justify-center rounded-md bg-forest px-5 text-sm font-semibold text-white shadow-soft transition active:scale-[0.98]"
+          >
+            Checkout
+            <ArrowRight className="ml-1.5 h-4 w-4" aria-hidden />
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
@@ -126,7 +147,7 @@ function CartLine({
           alt={item.product.name}
           seed={item.product.sku}
           aspect="square"
-          wrapperClassName="h-24 w-24 rounded-xl sm:h-28 sm:w-28"
+          wrapperClassName="h-20 w-20 rounded-xl sm:h-24 sm:w-24 lg:h-28 lg:w-28"
         />
       </Link>
       <div className="flex min-w-0 flex-1 flex-col gap-2">
@@ -151,9 +172,9 @@ function CartLine({
             type="button"
             onClick={onRemove}
             aria-label={`Remove ${item.product.name} from bag`}
-            className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted transition hover:bg-red-50 hover:text-sale"
+            className="tap-squish -mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-md text-muted transition active:scale-95 sm:h-9 sm:w-9"
           >
-            <Trash2 className="h-4 w-4" />
+            <Trash2 className="h-4 w-4" aria-hidden />
           </button>
         </div>
         <div className="mt-auto flex flex-wrap items-center justify-between gap-3">

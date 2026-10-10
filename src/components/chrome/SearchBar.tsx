@@ -101,10 +101,6 @@ export function SearchBar({
   return (
     <div ref={wrapRef} className={cn('relative', className)}>
       <div className="relative">
-        <Search
-          className="pointer-events-none absolute left-3.5 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-muted"
-          aria-hidden
-        />
         <input
           ref={inputRef}
           type="search"
@@ -122,7 +118,7 @@ export function SearchBar({
           onFocus={() => setOpen(true)}
           onKeyDown={onKeyDown}
           placeholder="Search products, brands and more..."
-          className="h-11 w-full rounded-md border border-transparent bg-mist pl-11 pr-14 text-sm text-ink placeholder:text-muted focus:border-forest focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest/15"
+          className="h-12 w-full rounded-full border border-transparent bg-mist pl-4 pr-24 text-sm text-ink placeholder:text-muted focus:border-forest focus:bg-white focus:outline-none focus:ring-2 focus:ring-forest/15 sm:h-11 sm:pl-4 sm:pr-20"
         />
         {query && (
           <button
@@ -132,16 +128,16 @@ export function SearchBar({
               inputRef.current?.focus();
             }}
             aria-label="Clear search"
-            className="absolute right-12 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded text-muted transition hover:bg-cream hover:text-ink"
+            className="absolute right-14 top-1/2 grid h-11 w-11 -translate-y-1/2 place-items-center rounded-full text-muted transition hover:bg-cream hover:text-ink sm:right-12"
           >
-            <X className="h-3.5 w-3.5" />
+            <X className="h-4 w-4" />
           </button>
         )}
         <button
           type="button"
           onClick={() => go(query)}
           aria-label="Search"
-          className="absolute right-1.5 top-1/2 grid h-8 w-8 -translate-y-1/2 place-items-center rounded-full bg-forest text-white transition hover:bg-forest-600"
+          className="absolute right-1.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full bg-forest text-white transition hover:bg-forest-600"
         >
           <Search className="h-4 w-4" />
         </button>

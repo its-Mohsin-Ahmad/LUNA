@@ -47,20 +47,20 @@ export function CategoryRail() {
 
   return (
     <section className="shell pt-7 pb-8 sm:pt-9 sm:pb-10" aria-label="Shop by category">
-      <ul className="no-scrollbar -mx-4 flex snap-x gap-5 overflow-x-auto px-4 pb-1 sm:gap-8 lg:mx-0 lg:grid lg:grid-cols-9 lg:gap-4 lg:overflow-visible lg:px-0">
+      <ul className="rail rail-bleed flex gap-4 overflow-x-auto pb-1 sm:gap-6 lg:mx-0 lg:grid lg:grid-cols-9 lg:gap-4 lg:overflow-visible lg:px-0">
         {shown.map((cat) => {
           const Icon = ICONS[cat.slug] ?? LayoutGrid;
           return (
-            <li key={cat.slug} className="w-[84px] shrink-0 snap-start lg:w-auto">
+            <li key={cat.slug} className="w-[72px] shrink-0 lg:w-auto">
               <Link href={`/shop/${cat.slug}`} className="group flex flex-col items-center text-center">
                 <span
-                  className={`grid h-[84px] w-[84px] place-items-center rounded-full transition-transform duration-300 group-hover:-translate-y-1 sm:h-[92px] sm:w-[92px] ${
+                  className={`grid h-[64px] w-[64px] place-items-center rounded-full transition-transform duration-300 group-hover:-translate-y-1 sm:h-[84px] sm:w-[84px] lg:h-[92px] lg:w-[92px] ${
                     PASTELS[cat.slug] ?? 'bg-mist'
                   }`}
                 >
-                  <Icon className="h-8 w-8 text-forest/80" aria-hidden strokeWidth={1.6} />
+                  <Icon className="h-6 w-6 text-forest/80 sm:h-7 sm:w-7 lg:h-8 lg:w-8" aria-hidden strokeWidth={1.6} />
                 </span>
-                <span className="mt-2.5 block text-[12.5px] font-semibold leading-tight text-ink transition-colors group-hover:text-forest">
+                <span className="clamp-2 mt-2 block text-[11.5px] font-semibold leading-tight text-ink transition-colors group-hover:text-forest sm:text-[12.5px]">
                   {cat.name}
                 </span>
               </Link>
@@ -69,12 +69,12 @@ export function CategoryRail() {
         })}
 
         {/* View all */}
-        <li className="w-[84px] shrink-0 snap-start lg:w-auto">
+        <li className="w-[72px] shrink-0 lg:w-auto">
           <Link href="/shop" className="group flex flex-col items-center text-center">
-            <span className="grid h-[84px] w-[84px] place-items-center rounded-full bg-mist transition-transform duration-300 group-hover:-translate-y-1 sm:h-[92px] sm:w-[92px]">
-              <LayoutGrid className="h-8 w-8 text-forest/80" aria-hidden strokeWidth={1.6} />
+            <span className="grid h-[64px] w-[64px] place-items-center rounded-full bg-mist transition-transform duration-300 group-hover:-translate-y-1 sm:h-[84px] sm:w-[84px] lg:h-[92px] lg:w-[92px]">
+              <LayoutGrid className="h-6 w-6 text-forest/80 sm:h-7 sm:w-7 lg:h-8 lg:w-8" aria-hidden strokeWidth={1.6} />
             </span>
-            <span className="mt-2.5 block text-[12.5px] font-semibold leading-tight text-ink transition-colors group-hover:text-forest">
+            <span className="mt-2 block text-[11.5px] font-semibold leading-tight text-ink transition-colors group-hover:text-forest sm:text-[12.5px]">
               View All
             </span>
           </Link>

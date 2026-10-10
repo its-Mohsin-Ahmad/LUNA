@@ -9,7 +9,7 @@ import { Providers } from '@/lib/store';
 import { Header } from './Header';
 import { Navigation } from './Navigation';
 import { Footer } from './Footer';
-import { MobileNav, MobileBottomNav } from './MobileNav';
+import { MobileNav, MobileBottomNav, BackToTop } from './MobileNav';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { ToastViewport } from '@/components/ui';
 
@@ -26,7 +26,8 @@ function StorefrontFrame({ children }: { children: ReactNode }) {
       <Header onOpenCart={() => setCartOpen(true)} onOpenMobileNav={() => setNavOpen(true)} />
       <Navigation />
 
-      <main id="main" className="flex-1 pb-16 lg:pb-0">
+      {/* Bottom padding clears the fixed mobile nav + the home indicator. */}
+      <main id="main" className="pb-below-nav flex-1 lg:pb-0">
         {children}
       </main>
 
@@ -35,6 +36,7 @@ function StorefrontFrame({ children }: { children: ReactNode }) {
       <CartDrawer open={cartOpen} onClose={() => setCartOpen(false)} />
       <MobileNav open={navOpen} onClose={() => setNavOpen(false)} />
       <MobileBottomNav onOpenCart={() => setCartOpen(true)} onOpenNav={() => setNavOpen(true)} />
+      <BackToTop />
       <ToastViewport />
     </div>
   );

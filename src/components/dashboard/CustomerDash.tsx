@@ -48,7 +48,7 @@ export function CustomerDash({ tab }: { tab: string }) {
 
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={Package} label="Orders" value={String(orders.length)} hint="All time" />
         <StatCard icon={PiggyBank} label="Lifetime spend" value={formatMoney(spend)} hint="Including shipping" />
         <StatCard icon={Heart} label="Saved items" value={String(wishlist.length)} hint="On your wishlist" />

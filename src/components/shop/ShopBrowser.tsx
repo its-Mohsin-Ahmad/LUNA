@@ -93,8 +93,9 @@ export function ShopBrowser({
       </aside>
 
       <div className="min-w-0">
-        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-sm text-muted" aria-live="polite">
+        {/* Sticky filter/sort toolbar — stays reachable while scrolling results. */}
+        <div className="sticky top-[132px] z-30 -mx-1 mb-4 flex flex-wrap items-center justify-between gap-2 bg-warm/95 px-1 py-2 backdrop-blur lg:static lg:top-0">
+          <p className="text-[13px] text-muted" aria-live="polite">
             {hydrated ? (
               <>
                 <strong className="font-semibold text-ink">{page.total}</strong> products
@@ -111,7 +112,7 @@ export function ShopBrowser({
               variant="outline"
               size="sm"
               onClick={() => setDrawerOpen(true)}
-              className="lg:hidden"
+              className="h-11 lg:hidden"
               icon={<SlidersHorizontal className="h-3.5 w-3.5" />}
             >
               Filters{activeCount ? ` (${activeCount})` : ''}
@@ -125,7 +126,7 @@ export function ShopBrowser({
               onChange={(e) =>
                 syncUrl({ ...filters, sort: e.target.value as FilterState['sort'], page: 1 })
               }
-              className="luna-select h-9 border-line pr-8 text-[13px] font-medium"
+              className="luna-select h-11 border-line pr-8 text-[13px] font-medium lg:h-9"
             >
               {SORT_OPTIONS.map((o) => (
                 <option key={o.value} value={o.value}>
@@ -146,7 +147,26 @@ export function ShopBrowser({
         />
       </div>
 
-      <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)} title="Filters">
+      <Drawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        title="Filters"
+        width="w-[88vw] max-w-[360px]"
+        footer={
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => syncUrl({ ...EMPTY_FILTERS })}
+            >
+              Clear all
+            </Button>
+            <Button className="flex-1" onClick={() => setDrawerOpen(false)}>
+              Show {page.total} results
+            </Button>
+          </div>
+        }
+      >
         <div className="px-5 pb-6">{panel}</div>
       </Drawer>
 

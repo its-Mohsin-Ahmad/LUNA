@@ -13,6 +13,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 150px; /* keeps anchors clear of the sticky header */
   -webkit-text-size-adjust: 100%;
 }
 
@@ -91,9 +92,88 @@ body {
     --shell-pad: 24px;
   }
 }
+/* ---------- Mobile gutter scale ----------
+   320–360 → 13px · 361–430 → 15px · tablet/desktop → 16–24px */
+@media (max-width: 768px) {
+  :root {
+    --shell-pad: 20px;
+  }
+}
 @media (max-width: 640px) {
   :root {
     --shell-pad: 16px;
+  }
+}
+@media (max-width: 430px) {
+  :root {
+    --shell-pad: 15px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --shell-pad: 13px;
+  }
+}
+
+/* ---------- Horizontal swipe rails ----------
+   `display`/`overflow` are deliberately NOT set here: each rail gets those
+   from Tailwind (`flex overflow-x-auto`, upgraded to `md:grid` / `lg:grid`
+   where the layout changes) so there is never a specificity fight. This class
+   only adds native momentum scrolling, snap points and hidden scrollbars. */
+.rail {
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.rail::-webkit-scrollbar {
+  display: none;
+}
+.rail > * {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+/* Runs the rail to the screen edges while keeping its content aligned with the
+   shell gutter — replaces hard-coded `-mx-4 px-4`. Mobile only, so it can
+   never fight `lg:mx-0` / `lg:px-0`. */
+@media (max-width: 1023px) {
+  .rail-bleed {
+    margin-inline: calc(var(--shell-pad) * -1);
+    padding-inline: var(--shell-pad);
+  }
+}
+
+/* ---------- Overflow guards ----------
+   Nothing may widen the viewport; components own their own scrolling. */
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+body {
+  overflow-wrap: break-word;
+}
+
+/* Touch devices never get hover-only affordances. */
+@media (hover: none) {
+  .tap-squish:active {
+    transform: scale(0.97);
+  }
+}
+
+/* Safe-area aware page bottom so the fixed mobile nav never covers copy. */
+.pb-safe {
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+}
+
+/* Mobile only: reserve room for the fixed bottom navigation bar. */
+@media (max-width: 1023px) {
+  .pb-below-nav {
+    padding-bottom: calc(4.5rem + env(safe-area-inset-bottom));
   }
 }
 
@@ -173,6 +253,12 @@ body {
 .clamp-3 {
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.clamp-4 {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

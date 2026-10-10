@@ -97,7 +97,7 @@ export function AddressesPanel() {
                   removeAddress(index);
                   toast.info('Address removed', 'It will no longer appear at checkout.');
                 }}
-                className="absolute right-4 top-4 grid h-8 w-8 place-items-center rounded-lg text-muted opacity-100 transition hover:bg-sale/10 hover:text-sale lg:opacity-0 lg:group-hover:opacity-100"
+                className="absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-lg text-muted transition hover:bg-sale/10 hover:text-sale sm:right-4 sm:top-4 sm:h-8 sm:w-8 lg:opacity-0 lg:group-hover:opacity-100"
               >
                 <Trash2 className="h-4 w-4" aria-hidden />
               </button>

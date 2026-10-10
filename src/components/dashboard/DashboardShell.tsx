@@ -75,7 +75,10 @@ export function DashboardShell({
       <div className="mx-auto flex max-w-[1400px] flex-col lg:flex-row">
         {/* Sidebar */}
         <aside className="sticky top-0 z-40 flex shrink-0 flex-col bg-forest text-cream lg:min-h-screen lg:w-[248px]">
-          <div className="flex items-center justify-between gap-3 px-5 py-4">
+          <div
+            className="flex items-center justify-between gap-3 px-4 py-3 lg:px-5 lg:py-4"
+            style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top))' }}
+          >
             <Link href="/" aria-label="Back to LUNA storefront">
               <LogoStack className="h-7" />
             </Link>
@@ -84,23 +87,9 @@ export function DashboardShell({
             </span>
           </div>
 
-          <div className="mx-4 hidden items-center gap-3 rounded-xl bg-white/10 px-3.5 py-3 lg:flex">
-            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-cream text-xs font-bold text-forest">
-              {user.name
-                .split(' ')
-                .map((w) => w[0])
-                .join('')
-                .slice(0, 2)}
-            </span>
-            <span className="min-w-0">
-              <span className="block truncate text-[13px] font-semibold">{user.name}</span>
-              <span className="block truncate text-[11px] text-cream/60">{user.email}</span>
-            </span>
-          </div>
-
           <nav
             aria-label="Dashboard sections"
-            className="thin-scrollbar mt-3 flex gap-1 overflow-x-auto px-3 pb-3 lg:mt-5 lg:flex-col lg:overflow-visible lg:pb-0"
+            className="thin-scrollbar mt-1 flex gap-1 overflow-x-auto px-3 pb-3 lg:mt-5 lg:flex-col lg:overflow-visible lg:px-3 lg:pb-0"
           >
             {tabs.map((t) => {
               const selected = t.key === active;
@@ -111,10 +100,10 @@ export function DashboardShell({
                   onClick={() => onSelect(t.key)}
                   aria-current={selected ? 'page' : undefined}
                   className={cn(
-                    'flex shrink-0 items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-[13.5px] font-semibold transition lg:w-full',
+                    'flex min-h-11 shrink-0 items-center gap-2.5 rounded-lg px-3.5 py-2.5 text-[13.5px] font-semibold transition lg:w-full',
                     selected
                       ? 'bg-cream text-forest'
-                      : 'text-cream/75 hover:bg-white/10 hover:text-cream'
+                      : 'text-cream/75 active:bg-white/10 active:text-cream'
                   )}
                 >
                   <t.icon className="h-4 w-4 shrink-0" aria-hidden />
@@ -145,7 +134,7 @@ export function DashboardShell({
 
         {/* Main column */}
         <div className="min-w-0 flex-1">
-          <header className="sticky top-[57px] z-30 flex flex-wrap items-center justify-between gap-3 border-b border-line bg-white/90 px-5 py-3.5 backdrop-blur lg:top-0">
+          <header className="sticky top-0 z-30 flex flex-wrap items-center justify-between gap-3 border-b border-line bg-white/90 px-4 py-3 backdrop-blur sm:px-5 sm:py-3.5">
             <div>
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-forest-400">
                 {ROLE_LABEL[role]} dashboard

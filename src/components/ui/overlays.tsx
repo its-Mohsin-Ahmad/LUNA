@@ -97,7 +97,7 @@ export function Drawer({
   title,
   children,
   side = 'right',
-  width = 'max-w-md',
+  width = 'w-full max-w-md',
   footer,
 }: {
   open: boolean;
@@ -124,7 +124,7 @@ export function Drawer({
         aria-modal="true"
         aria-labelledby={titleId}
         className={cn(
-          'absolute inset-y-0 flex w-full flex-col bg-white shadow-card-hover',
+          'absolute inset-y-0 flex flex-col bg-white shadow-card-hover',
           width,
           side === 'right' ? 'right-0 animate-slideInRight' : 'left-0 animate-slideInLeft'
         )}

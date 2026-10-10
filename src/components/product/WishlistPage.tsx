@@ -63,7 +63,7 @@ export function WishlistPage() {
         </div>
       </div>
 
-      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      <ul className="grid gap-4 grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {products.map((product) => (
           <li key={product.id} className="relative">
             <article className="flex h-full flex-col overflow-hidden rounded-xl border border-line bg-white">

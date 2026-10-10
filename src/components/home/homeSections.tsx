@@ -9,10 +9,9 @@ import Link from 'next/link';
 import {
   ArrowRight,
   ArrowLeft,
-  Dot,
+  BadgeCheck,
   Heart,
   Mail,
-  Quote,
   ShieldCheck,
   Truck,
   RotateCcw,
@@ -30,14 +29,16 @@ import { cn } from '@/lib/utils';
 
 export function PromoCards() {
   return (
-    <section className="shell py-10 sm:py-14" aria-label="Featured promotions">
-      <div className="grid gap-4 md:grid-cols-3">
+    <section className="shell py-8 sm:py-14" aria-label="Featured promotions">
+      {/* Mobile: swipeable rail showing ~1.1 cards so the next one peeks in.
+          Tablet / desktop: the reference three-up grid. */}
+      <div className="rail rail-bleed -mb-2 flex gap-3 overflow-x-auto pb-2 md:grid md:grid-cols-3 md:gap-4 md:overflow-visible md:pb-0">
         {PROMO_CARDS.map((card) => (
           <Link
             key={card.id}
             href={card.href}
             className={cn(
-              'group relative flex min-h-[220px] flex-col overflow-hidden rounded-2xl p-5 shadow-soft transition-shadow hover:shadow-card-hover',
+              'group relative flex h-[196px] w-[82vw] max-w-[320px] flex-col overflow-hidden rounded-2xl p-5 shadow-soft transition-shadow hover:shadow-card-hover md:h-auto md:min-h-[220px] md:w-auto md:max-w-none',
               card.bg ? "bg-[#" + card.bg + "]" : "bg-white"
             )}
           >
@@ -94,13 +95,13 @@ export function BrandStrip() {
       <div className="relative">
         <ul
           ref={scroller}
-          className="no-scrollbar mx-auto flex max-w-[1360px] gap-3 overflow-x-auto px-6 lg:px-8"
+          className="rail rail-bleed mx-auto flex max-w-[1360px] gap-3 overflow-x-auto lg:px-8"
         >
           {featured.map((brand) => (
             <li key={brand.slug} className="shrink-0">
               <Link
                 href={`/brands/${brand.slug}`}
-                className="flex h-16 w-36 items-center gap-2.5 rounded-xl border border-line bg-warm px-3 transition hover:border-forest/30 hover:bg-cream"
+                className="flex h-16 w-[142px] items-center gap-2.5 rounded-xl border border-line bg-warm px-3 transition hover:border-forest/30 hover:bg-cream sm:w-36"
                 title={brand.name}
               >
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-forest text-[11px] font-bold text-cream">
@@ -119,7 +120,7 @@ export function BrandStrip() {
           type="button"
           onClick={() => nudge(-1)}
           aria-label="Scroll brands left"
-          className="absolute left-2 top-1/2 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid"
+          className="absolute left-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -127,7 +128,7 @@ export function BrandStrip() {
           type="button"
           onClick={() => nudge(1)}
           aria-label="Scroll brands right"
-          className="absolute right-2 top-1/2 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid"
+          className="absolute right-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid"
         >
           <ArrowRight className="h-4 w-4" />
         </button>
@@ -141,43 +142,76 @@ export function TestimonialSection() {
   const scroller = useRef<HTMLUListElement>(null);
   const visible = TESTIMONIALS.slice(0, 4);
   const [active, setActive] = useState(0);
-  const scrollTo = (dir: number) => {
-    const next = Math.max(0, Math.min(visible.length - 4, active + dir));
+
+  /* Phones show ~1 card (next one peeking); the dot row and native swipe stay
+     in sync because every card shares the same step. */
+  const step = () => {
+    const el = scroller.current;
+    if (!el || visible.length < 2) return 0;
+    return (el.scrollWidth - el.clientWidth) / (visible.length - 1);
+  };
+
+  const scrollToIndex = (i: number) => {
+    const next = Math.max(0, Math.min(visible.length - 1, i));
     setActive(next);
-    scroller.current?.scrollTo({ left: next * 360, behavior: 'smooth' });
+    scroller.current?.scrollTo({ left: next * step(), behavior: 'smooth' });
+  };
+
+  const onScroll = () => {
+    const s = step();
+    if (s > 0) setActive(Math.round((scroller.current?.scrollLeft ?? 0) / s));
   };
 
   return (
-    <section className="shell py-12 sm:py-16" aria-labelledby="testimonials-heading">
-      <SectionHeading
-        eyebrow="Loved By Thousands"
-        title="Loved By Thousands"
-        align="center"
-      />
+    <section className="shell py-10 sm:py-16" aria-labelledby="testimonials-heading">
+      <SectionHeading eyebrow="Loved By Thousands" title="Loved By Thousands" align="center" />
 
       <div className="relative">
         <ul
           ref={scroller}
-          className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 sm:gap-5"
+          onScroll={onScroll}
+          className="rail rail-bleed flex gap-4 overflow-x-auto sm:gap-5"
         >
           {visible.map((t) => (
-            <li key={t.id} className="w-[280px] shrink-0 snap-start sm:w-[340px]">
+            <li key={t.id} className="w-[82vw] max-w-[340px] shrink-0 sm:w-[340px] lg:w-[calc((100%-3.75rem)/4)]">
               <TestimonialCard testimonial={t} />
             </li>
           ))}
         </ul>
 
-        <button type="button" onClick={() => scrollTo(-1)} aria-label="Scroll testimonials left" className="absolute left-2 top-1/2 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid">
+        <button
+          type="button"
+          onClick={() => scrollToIndex(active - 1)}
+          aria-label="Scroll testimonials left"
+          className="absolute left-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid"
+        >
           <ArrowLeft className="h-4 w-4" />
         </button>
-        <button type="button" onClick={() => scrollTo(1)} aria-label="Scroll testimonials right" className="absolute right-2 top-1/2 hidden h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid">
+        <button
+          type="button"
+          onClick={() => scrollToIndex(active + 1)}
+          aria-label="Scroll testimonials right"
+          className="absolute right-2 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-line bg-white text-forest shadow-soft transition hover:bg-cream lg:grid"
+        >
           <ArrowRight className="h-4 w-4" />
         </button>
 
-        <div className="mt-6 flex justify-center gap-2">
-          {visible.map((_, i) => (
-            <button key={i} type="button" onClick={() => scrollTo(i < 3 ? 0 : i - 3)} aria-label={`Go to testimonial ${i + 1}`} className={cn('h-2.5 rounded-full transition', i === active && 'w-6 bg-forest')}>
-              <Dot className="h-2.5 w-2.5 fill-current" />
+        <div className="mt-5 flex justify-center gap-1 lg:hidden">
+          {visible.map((t, i) => (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => scrollToIndex(i)}
+              aria-label={`Go to testimonial ${i + 1}`}
+              className="grid h-8 w-6 place-items-center"
+            >
+              <span
+                aria-hidden
+                className={cn(
+                  'block h-2 rounded-full transition-all duration-300',
+                  i === active ? 'w-6 bg-forest' : 'w-2 bg-forest/25'
+                )}
+              />
             </button>
           ))}
         </div>
@@ -189,11 +223,11 @@ export function TestimonialSection() {
 function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
   return (
     <figure className="flex h-full flex-col rounded-2xl border border-line bg-white p-5">
-      <div className="flex gap-1 text-forest/30" aria-label="Love">
-        <Heart className="h-5 w-5 fill-current" />
-        <Heart className="h-5 w-5 fill-current" />
+      <div className="flex gap-1 text-forest/30" aria-label="Loved by customers">
+        <Heart className="h-5 w-5 fill-current" aria-hidden />
+        <Heart className="h-5 w-5 fill-current" aria-hidden />
       </div>
-      <blockquote className="mt-2 flex-1 text-sm leading-relaxed text-ink">
+      <blockquote className="clamp-4 mt-2 flex-1 text-[13.5px] leading-relaxed text-ink sm:text-sm">
         {testimonial.quote}
       </blockquote>
       <Rating value={testimonial.rating} size="xs" showValue={false} className="mt-3" />
@@ -206,10 +240,16 @@ function TestimonialCard({ testimonial }: { testimonial: Testimonial }) {
           wrapperClassName="h-9 w-9 shrink-0 rounded-full"
         />
         <span className="min-w-0">
-          <span className="block truncate text-[13px] font-semibold text-ink">
-            {testimonial.name}
+          <span className="flex items-center gap-1.5">
+            <span className="clamp-1 text-[13px] font-semibold text-ink">
+              {testimonial.name}
+            </span>
+            <BadgeCheck
+              className="h-3.5 w-3.5 shrink-0 text-forest"
+              aria-label="Verified buyer"
+            />
           </span>
-          <span className="block truncate text-[11px] text-muted">
+          <span className="clamp-1 block text-[11px] text-muted">
             {testimonial.role} · {testimonial.location}
           </span>
         </span>
@@ -228,10 +268,10 @@ export function HomeNewsletter() {
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cream/75">
             Newsletters
           </p>
-          <h2 className="display text-[28px] leading-[1.05] text-white sm:text-[36px]">
+          <h2 className="display text-[26px] leading-[1.05] text-white sm:text-[36px]">
             The LUNA newsletter
           </h2>
-          <p className="mt-3 max-w-md text-sm leading-relaxed text-cream/85">
+          <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-cream/85 sm:text-sm">
             Pre-release access to new collections, first look at new launches, plus early access to
             sales.
           </p>
@@ -256,7 +296,8 @@ function NewsletterForm({ className }: { className?: string }) {
 
   return (
     <form className={cn('flex flex-1 justify-center', className)} onSubmit={submit} noValidate>
-      <div className="flex w-full max-w-md items-center gap-2">
+      {/* Phones: stacked input + full-width button. `sm` up: inline row. */}
+      <div className="flex w-full max-w-md flex-col gap-2.5 sm:flex-row sm:items-center">
         <Input
           type="email"
           required
@@ -265,19 +306,19 @@ function NewsletterForm({ className }: { className?: string }) {
           value={value}
           onChange={(e) => setValue(e.target.value)}
           autoComplete="email"
+          className="sm:h-11"
         />
         <button
           type="submit"
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-forest px-5 text-sm font-semibold text-white shadow-soft transition hover:bg-forest-600 focus:outline-none focus:ring-2 focus:ring-forest/20 focus:ring-offset-2"
+          className="tap-squish inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-md bg-white px-5 text-sm font-semibold text-forest shadow-soft transition hover:bg-cream focus:outline-none focus-visible:ring-2 focus-visible:ring-cream focus-visible:ring-offset-2 focus-visible:ring-offset-forest sm:h-11"
         >
-          <Mail className="h-4 w-4" />
-          {sent ? 'Thanks!' : 'Subscribe'}
-          <ArrowRight className="h-4 w-3.5" />
+          <Mail className="h-4 w-4" aria-hidden />
+          {sent ? "You're on the list" : 'Subscribe'}
         </button>
       </div>
       {sent && (
-        <p className="mt-3 text-center text-sm font-medium text-cream" role="status">
-          You're on the list — welcome to the Inner Circle.
+        <p className="mt-3 text-[13px] font-medium text-cream sm:text-center sm:text-sm" role="status">
+          Welcome to the Inner Circle — check your inbox for a welcome offer.
         </p>
       )}
     </form>
@@ -290,18 +331,23 @@ const TRUST_ICONS = [Truck, RotateCcw, CreditCard, ShieldCheck];
 
 export function TrustBar() {
   return (
-    <section className="shell pb-4" aria-label="Why shop with LUNA">
-      <ul className="grid gap-4 rounded-2xl border border-line bg-white p-6 sm:grid-cols-2 lg:grid-cols-4">
+    <section className="shell pb-6 pt-4 sm:pb-4" aria-label="Why shop with LUNA">
+      {/* 2×2 on phones · 4-up on desktop, compact spacing throughout. */}
+      <ul className="grid grid-cols-2 gap-x-4 gap-y-5 rounded-2xl border border-line bg-white p-4 sm:gap-5 sm:p-6 lg:grid-cols-4 lg:gap-6">
         {TRUST_POINTS.map((point, i) => {
           const Icon = TRUST_ICONS[i % TRUST_ICONS.length];
           return (
-            <li key={point.title} className="flex items-start gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg bg-cream text-forest">
-                <Icon className="h-[18px] w-[18px]" />
+            <li key={point.title} className="flex items-start gap-2.5 sm:gap-3">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-cream text-forest sm:h-10 sm:w-10">
+                <Icon className="h-[17px] w-[17px] sm:h-[18px] sm:w-[18px]" aria-hidden />
               </span>
-              <span>
-                <span className="block text-[13.5px] font-semibold text-ink">{point.title}</span>
-                <span className="mt-0.5 block text-xs leading-relaxed text-muted">{point.copy}</span>
+              <span className="min-w-0">
+                <span className="block text-[13px] font-semibold leading-snug text-ink sm:text-[13.5px]">
+                  {point.title}
+                </span>
+                <span className="mt-0.5 block text-[11.5px] leading-relaxed text-muted sm:text-xs">
+                  {point.copy}
+                </span>
               </span>
             </li>
           );

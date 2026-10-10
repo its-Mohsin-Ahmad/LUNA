@@ -95,8 +95,8 @@ export function QuantityStepper({
   size?: 'sm' | 'md';
   label?: string;
 }) {
-  const box = size === 'sm' ? 'h-8' : 'h-10';
-  const btn = size === 'sm' ? 'w-8 text-sm' : 'w-10 text-base';
+  const box = size === 'sm' ? 'h-10 sm:h-8' : 'h-11 sm:h-10';
+  const btn = size === 'sm' ? 'w-11 text-sm sm:w-8' : 'w-12 text-base sm:w-10';
   return (
     <div className={cn('inline-flex items-center rounded-md border border-line bg-white', box)}>
       <button
@@ -104,7 +104,7 @@ export function QuantityStepper({
         aria-label={`Decrease ${label.toLowerCase()}`}
         disabled={value <= min}
         onClick={() => onChange(Math.max(min, value - 1))}
-        className={cn(btn, 'grid h-full place-items-center font-semibold text-forest transition hover:bg-cream disabled:opacity-35 disabled:hover:bg-transparent')}
+        className={cn(btn, 'grid h-full place-items-center font-semibold text-forest transition active:bg-cream disabled:opacity-35 disabled:active:bg-transparent')}
       >
         −
       </button>
@@ -125,7 +125,7 @@ export function QuantityStepper({
         aria-label={`Increase ${label.toLowerCase()}`}
         disabled={value >= max}
         onClick={() => onChange(Math.min(max, value + 1))}
-        className={cn(btn, 'grid h-full place-items-center font-semibold text-forest transition hover:bg-cream disabled:opacity-35 disabled:hover:bg-transparent')}
+        className={cn(btn, 'grid h-full place-items-center font-semibold text-forest transition active:bg-cream disabled:opacity-35 disabled:active:bg-transparent')}
       >
         +
       </button>

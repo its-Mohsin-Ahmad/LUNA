@@ -189,7 +189,7 @@ export function AdminDash({ tab }: { tab: string }) {
   /* Overview */
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={Boxes} label="Products" value={String(PRODUCTS.length)} hint={`${CATEGORIES.length} categories · ${BRANDS.length} brands`} />
         <StatCard icon={ShoppingBag} label="Orders" value={String(allOrders.length)} hint="Demo + placed here" />
         <StatCard icon={LayoutDashboard} label="GMV" value={formatMoney(gmv)} hint="Across visible orders" tone="forest" />

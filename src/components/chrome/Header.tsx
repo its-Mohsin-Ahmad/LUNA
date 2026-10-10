@@ -35,20 +35,21 @@ export function Header({
         'sticky top-0 z-50 border-b bg-white/95 backdrop-blur-md transition-shadow',
         scrolled ? 'border-line shadow-soft' : 'border-transparent'
       )}
+      style={{ paddingTop: 'env(safe-area-inset-top)' }}
     >
       <div className="shell">
-        <div className="flex h-16 items-center gap-2 sm:gap-4 lg:h-[74px] lg:gap-6">
-          {/* Mobile: hamburger lives left of the logo */}
+        {/* ROW 1 — hamburger · logo · wishlist · cart (icons only on phones) */}
+        <div className="flex h-16 items-center gap-1 sm:gap-4 lg:h-[74px] lg:gap-6">
           <button
             type="button"
             onClick={onOpenMobileNav}
             aria-label="Open menu"
-            className="-ml-1 grid h-10 w-10 shrink-0 place-items-center rounded-md text-forest transition hover:bg-cream md:hidden"
+            className="tap-squish -ml-1 grid h-11 w-11 shrink-0 place-items-center rounded-lg text-forest transition hover:bg-cream md:hidden"
           >
             <Menu className="h-5 w-5" />
           </button>
 
-          <Logo className="shrink-0" showTagline />
+          <Logo className="min-w-0 shrink" showTagline />
 
           {/* Center: large search (desktop / tablet) */}
           <SearchBar className="mx-auto hidden max-w-2xl flex-1 md:block" key={`d-${pathname}`} />
@@ -57,8 +58,8 @@ export function Header({
           <HeaderActions onOpenCart={onOpenCart} className="ml-auto md:ml-0" />
         </div>
 
-        {/* Mobile: search on its own row */}
-        <div className="pb-3 md:hidden">
+        {/* ROW 2 — full-width search */}
+        <div className="pb-2.5 md:hidden">
           <SearchBar key={`m-${pathname}`} />
         </div>
       </div>

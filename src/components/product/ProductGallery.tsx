@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { Share2, Check } from 'lucide-react';
+import { useRef, useState } from 'react';
+import { Share2, Check, ChevronLeft, ChevronRight } from 'lucide-react';
 import type { Product } from '@/lib/types';
 import { useToast } from '@/lib/store';
 import { cn } from '@/lib/utils';
@@ -11,7 +11,11 @@ import { Badge } from '@/components/ui/primitives';
 export function ProductGallery({ product }: { product: Product }) {
   const [activeImage, setActiveImage] = useState(0);
   const [shareCopied, setShareCopied] = useState(false);
+  const dragStart = useRef<number | null>(null);
   const { info } = useToast();
+
+  const total = product.images.length;
+  const go = (next: number) => setActiveImage(((next % total) + total) % total);
 
   const share = async () => {
     const url = typeof window !== 'undefined' ? window.location.href : '';
@@ -30,7 +34,7 @@ export function ProductGallery({ product }: { product: Product }) {
 
   return (
     <div className="grid gap-3 sm:grid-cols-[80px_minmax(0,1fr)]">
-      <ul className="order-2 flex gap-3 sm:order-1 sm:flex-col">
+      <ul className="order-2 flex gap-2.5 sm:order-1 sm:flex-col sm:gap-3">
         {product.images.map((image, i) => (
           <li key={image}>
             <button
@@ -40,7 +44,7 @@ export function ProductGallery({ product }: { product: Product }) {
               aria-current={i === activeImage}
               className={cn(
                 'overflow-hidden rounded-lg border-2 transition',
-                i === activeImage ? 'border-forest' : 'border-transparent hover:border-line'
+                i === activeImage ? 'border-forest' : 'border-transparent'
               )}
             >
               <SmartImage
@@ -56,10 +60,22 @@ export function ProductGallery({ product }: { product: Product }) {
       </ul>
 
       <div className="order-1 sm:order-2">
-        <div className="relative overflow-hidden rounded-2xl border border-line bg-white">
+        {/* Swipeable main image; dots on phones, arrows from `sm` up. */}
+        <div
+          className="relative touch-pan-y overflow-hidden rounded-2xl border border-line bg-white"
+          onPointerDown={(e) => {
+            dragStart.current = e.clientX;
+          }}
+          onPointerUp={(e) => {
+            if (dragStart.current === null) return;
+            const delta = e.clientX - dragStart.current;
+            dragStart.current = null;
+            if (Math.abs(delta) > 45) go(activeImage + (delta < 0 ? 1 : -1));
+          }}
+        >
           <SmartImage
             src={product.images[activeImage]}
-            alt={`${product.name} — view ${activeImage + 1}`}
+            alt={`${product.name} - view ${activeImage + 1}`}
             seed={`${product.sku}-main`}
             aspect="4/3"
             priority
@@ -74,10 +90,51 @@ export function ProductGallery({ product }: { product: Product }) {
             type="button"
             onClick={share}
             aria-label="Share this product"
-            className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-white/95 text-forest shadow-soft transition hover:bg-cream"
+            className="absolute right-3 top-3 grid h-10 w-10 place-items-center rounded-full bg-white/95 text-forest shadow-soft transition active:scale-95"
           >
             {shareCopied ? <Check className="h-4 w-4" /> : <Share2 className="h-4 w-4" />}
           </button>
+
+          {total > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={() => go(activeImage - 1)}
+                aria-label="Previous image"
+                className="absolute left-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-forest shadow-soft transition hover:bg-white sm:grid"
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => go(activeImage + 1)}
+                aria-label="Next image"
+                className="absolute right-3 top-1/2 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-forest shadow-soft transition hover:bg-white sm:grid"
+              >
+                <ChevronRight className="h-5 w-5" />
+              </button>
+              <div className="absolute bottom-3 left-0 right-0 flex items-center justify-center gap-1 sm:hidden">
+                {product.images.map((img, i) => (
+                  <button
+                    key={img}
+                    type="button"
+                    onClick={() => setActiveImage(i)}
+                    aria-label={`Go to image ${i + 1}`}
+                    aria-current={i === activeImage}
+                    className="grid h-8 w-5 place-items-center"
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        'block h-1.5 rounded-full transition-all duration-300',
+                        i === activeImage ? 'w-5 bg-forest' : 'w-1.5 bg-forest/30'
+                      )}
+                    />
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -160,7 +160,7 @@ export function VendorDash({ tab }: { tab: string }) {
   /* Overview */
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
         <StatCard icon={Boxes} label="Active SKUs" value={String(VENDOR_PRODUCTS.length)} hint="Northbay Supply Co." />
         <StatCard icon={PackageCheck} label="Units sold" value={compactNumber(units)} hint="Lifetime" />
         <StatCard icon={Wallet} label="Lifetime GMV" value={formatMoney(gmv)} hint="Before commission" tone="forest" />

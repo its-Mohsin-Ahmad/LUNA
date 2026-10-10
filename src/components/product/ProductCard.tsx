@@ -84,26 +84,33 @@ export function ProductCard({
             aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
             aria-pressed={saved}
             className={cn(
-              'absolute right-2.5 top-2.5 grid h-8 w-8 place-items-center rounded-full bg-white/95 shadow-soft transition',
-              saved ? 'text-sale' : 'text-muted hover:text-sale'
+              'absolute right-2 top-2 grid h-11 w-11 place-items-center rounded-full text-ink/50 transition active:scale-95',
+              saved ? 'text-sale' : 'hover:text-sale'
             )}
           >
-            <Heart className={cn('h-4 w-4', saved && 'fill-current')} />
+            <span
+              className={cn(
+                'grid h-8 w-8 place-items-center rounded-full bg-white/95 shadow-soft',
+                saved && 'text-sale'
+              )}
+            >
+              <Heart className={cn('h-4 w-4', saved && 'fill-current')} />
+            </span>
           </button>
         </div>
 
-        <div className="flex flex-1 flex-col gap-1 p-3 sm:p-3.5">
-          <h3 className="clamp-2 min-h-[34px] text-[13.5px] font-semibold leading-snug text-ink transition-colors group-hover:text-forest sm:text-sm">
+        <div className="flex flex-1 flex-col gap-1 p-2.5 sm:p-3.5">
+          <h3 className="clamp-2 min-h-[32px] text-[13px] font-semibold leading-snug text-ink transition-colors group-hover:text-forest sm:min-h-[34px] sm:text-[13.5px] sm:text-sm">
             {product.name}
           </h3>
           <Rating value={product.rating} count={product.reviewCount} size="xs" />
-          <div className="mt-auto flex items-end justify-between gap-2 pt-1.5">
-            <div className="flex flex-wrap items-baseline gap-1.5">
-              <span className="text-[15px] font-bold tabular-nums text-ink sm:text-base">
+          <div className="mt-auto flex items-end justify-between gap-1.5 pt-1.5">
+            <div className="flex min-w-0 flex-wrap items-baseline gap-x-1.5">
+              <span className="text-[14.5px] font-bold tabular-nums text-ink sm:text-base">
                 {formatMoney(product.price)}
               </span>
               {product.originalPrice && (
-                <span className="text-xs tabular-nums text-muted line-through">
+                <span className="text-[11px] tabular-nums text-muted line-through sm:text-xs">
                   {formatMoney(product.originalPrice)}
                 </span>
               )}
@@ -112,9 +119,9 @@ export function ProductCard({
               type="button"
               onClick={handleAdd}
               aria-label={`Add ${product.name} to cart`}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-forest text-white transition hover:bg-forest-600"
+              className="tap-squish grid h-11 w-11 shrink-0 place-items-center rounded-full bg-forest text-white transition hover:bg-forest-600 sm:h-9 sm:w-9"
             >
-              <ShoppingBag className="h-4 w-4" />
+              <ShoppingBag className="h-4 w-4 sm:h-[17px] sm:w-[17px]" aria-hidden />
             </button>
           </div>
         </div>

@@ -61,12 +61,12 @@ export function ProductCarousel({
         <div className="relative">
           <ul
             ref={scroller}
-            className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-2"
+            className="rail rail-bleed flex gap-3 overflow-x-auto pb-3 sm:gap-4"
           >
             {products.map((product, i) => (
               <li
                 key={product.id}
-                className="w-[calc(50%-0.5rem)] shrink-0 snap-start sm:w-[calc((100%-2rem)/3)] lg:w-[calc((100%-4rem)/5)]"
+                className="w-[62%] shrink-0 sm:w-[calc((100%-2rem)/3)] lg:w-[calc((100%-4rem)/5)]"
               >
                 <ProductCard product={product} priority={i < 2} />
               </li>

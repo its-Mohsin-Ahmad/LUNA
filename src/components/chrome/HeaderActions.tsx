@@ -70,6 +70,12 @@ export function HeaderActions({
 
   const dashboardHref = user ? `/dashboard/${user.role.toLowerCase()}` : '/login';
 
+  /* Shared sizing: 44×44 tap target on phones, compact labels from `sm` up. */
+  const ACTION_BASE =
+    'tap-squish relative flex h-11 w-11 flex-col items-center justify-center gap-1 rounded-lg px-1 text-forest transition hover:bg-cream sm:h-auto sm:w-auto sm:flex-row sm:gap-2 sm:px-2.5 sm:py-1.5';
+  const ACTION_LABEL =
+    'hidden text-[10.5px] font-semibold leading-none sm:block';
+
   return (
     <div className={cn('flex items-center gap-0.5 sm:gap-1.5', className)}>
       <div className="relative" ref={menuRef}>
@@ -79,9 +85,9 @@ export function HeaderActions({
           aria-expanded={menuOpen}
           aria-haspopup="menu"
           aria-label="Account menu"
-          className="flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-forest transition hover:bg-cream"
+          className={ACTION_BASE}
         >
-          <span className="grid h-6 w-6 place-items-center">
+          <span className="grid h-6 w-6 shrink-0 place-items-center">
             {user ? (
               <SmartImage
                 src={user.avatar}
@@ -94,7 +100,7 @@ export function HeaderActions({
               <UserIcon className="h-[21px] w-[21px]" />
             )}
           </span>
-          <span className="text-[10.5px] font-semibold leading-none">Account</span>
+          <span className={ACTION_LABEL}>Account</span>
         </button>
         {menuOpen && (
           <div
@@ -161,30 +167,30 @@ export function HeaderActions({
       <Link
         href="/wishlist"
         aria-label={`Wishlist, ${wishlist.length} items`}
-        className="relative flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-forest transition hover:bg-cream"
+        className={ACTION_BASE}
       >
-        <span className="relative grid h-6 w-6 place-items-center">
+        <span className="relative grid h-6 w-6 shrink-0 place-items-center">
           <Heart className="h-[21px] w-[21px]" />
           <span className="absolute -right-1.5 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-forest px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white">
             {wishlist.length > 9 ? '9+' : wishlist.length}
           </span>
         </span>
-        <span className="text-[10.5px] font-semibold leading-none">Wishlist</span>
+        <span className={ACTION_LABEL}>Wishlist</span>
       </Link>
 
       <button
         type="button"
         onClick={onOpenCart}
         aria-label={`Cart, ${totals.itemCount} items, ${formatMoney(totals.total, currency)}`}
-        className="relative flex flex-col items-center gap-1 rounded-lg px-2 py-1.5 text-forest transition hover:bg-cream"
+        className={ACTION_BASE}
       >
-        <span className="relative grid h-6 w-6 place-items-center">
+        <span className="relative grid h-6 w-6 shrink-0 place-items-center">
           <ShoppingBag className="h-[21px] w-[21px]" />
           <span className="absolute -right-1.5 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-ink px-1 text-[9px] font-bold leading-none text-white ring-2 ring-white">
             {totals.itemCount > 99 ? '99+' : totals.itemCount}
           </span>
         </span>
-        <span className="text-[10.5px] font-semibold leading-none">Cart</span>
+        <span className={ACTION_LABEL}>Cart</span>
       </button>
     </div>
   );
