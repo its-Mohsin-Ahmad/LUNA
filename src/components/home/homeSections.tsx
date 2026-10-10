@@ -164,7 +164,7 @@ export function TestimonialSection() {
 
   return (
     <section className="shell py-10 sm:py-16" aria-labelledby="testimonials-heading">
-      <SectionHeading eyebrow="Loved By Thousands" title="Loved By Thousands" align="center" />
+      <SectionHeading title="Loved By Thousands ❤️" align="center" />
 
       <div className="relative">
         <ul
@@ -266,10 +266,10 @@ export function HomeNewsletter() {
       <div className="shell relative flex flex-col gap-6 py-12 sm:flex-row sm:py-14 sm:gap-8">
         <div className="flex-1">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-cream/75">
-            Newsletters
+            Newsletter
           </p>
           <h2 className="display text-[26px] leading-[1.05] text-white sm:text-[36px]">
-            The LUNA newsletter
+            Stay in the Loop
           </h2>
           <p className="mt-3 max-w-md text-[13.5px] leading-relaxed text-cream/85 sm:text-sm">
             Pre-release access to new collections, first look at new launches, plus early access to
