@@ -17,10 +17,24 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Lock horizontal scrolling at the viewport. `clip` (not `hidden`) is used
+   where supported so the root never becomes a scroll container — that keeps
+   the sticky header and the fixed bottom nav working. `hidden` is the
+   fallback for older engines. */
+html,
+body {
+  overflow-x: hidden;
+}
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
+}
+
 body {
   @apply bg-warm text-ink font-sans antialiased;
   text-rendering: optimizeLegibility;
-  overflow-x: hidden;
 }
 
 ::selection {

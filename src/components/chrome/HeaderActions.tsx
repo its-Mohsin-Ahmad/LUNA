@@ -77,8 +77,8 @@ export function HeaderActions({
     'hidden text-[10.5px] font-semibold leading-none sm:block';
 
   return (
-    <div className={cn('flex items-center gap-0.5 sm:gap-1.5', className)}>
-      <div className="relative" ref={menuRef}>
+    <div className={cn('relative flex items-center gap-0.5 sm:gap-1.5', className)}>
+      <div ref={menuRef}>
         <button
           type="button"
           onClick={() => setMenuOpen((v) => !v)}
@@ -105,7 +105,7 @@ export function HeaderActions({
         {menuOpen && (
           <div
             role="menu"
-            className="absolute right-0 top-[calc(100%+8px)] z-50 w-64 overflow-hidden rounded-xl border border-line bg-white shadow-card-hover animate-fadeUp"
+            className="absolute right-0 top-[calc(100%+8px)] z-50 w-64 max-w-[calc(100vw-1.5rem)] overflow-hidden rounded-xl border border-line bg-white shadow-card-hover animate-fadeUp"
           >
             {user ? (
               <>
