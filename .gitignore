@@ -16,3 +16,10 @@ server.log
 # scratch
 bad-ids.txt
 
+
+# local test scratch
+_*.cjs
+dt.txt
+devtest.txt
+dev.log
+
