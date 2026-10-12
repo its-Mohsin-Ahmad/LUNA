@@ -88,7 +88,7 @@ export function FlashSale({ products }: { products: Product[] }) {
           </div>
         </div>
 
-        <ul className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-5 py-5 sm:gap-5 sm:px-7">
+        <ul className="rail flex gap-4 overflow-x-auto px-5 py-5 sm:gap-5 sm:px-7">
           {products.map((product) => (
             <li key={product.id} className="w-[190px] shrink-0 snap-start sm:w-[212px]">
               <article className="flex h-full flex-col overflow-hidden rounded-xl bg-white/95">
