@@ -33,8 +33,10 @@ export function ProductGallery({ product }: { product: Product }) {
   };
 
   return (
-    <div className="grid gap-3 sm:grid-cols-[80px_minmax(0,1fr)]">
-      <ul className="order-2 flex gap-2.5 sm:order-1 sm:flex-col sm:gap-3">
+    // `grid-cols-1`/`min-w-0` let the track shrink on phones; the thumbnail
+    // strip wraps instead of forcing a 302px-wide row (sideways page).
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-[80px_minmax(0,1fr)]">
+      <ul className="order-2 flex flex-wrap gap-2.5 sm:order-1 sm:flex-nowrap sm:flex-col sm:gap-3">
         {product.images.map((image, i) => (
           <li key={image}>
             <button
@@ -59,7 +61,7 @@ export function ProductGallery({ product }: { product: Product }) {
         ))}
       </ul>
 
-      <div className="order-1 sm:order-2">
+      <div className="order-1 min-w-0 sm:order-2">
         {/* Swipeable main image; dots on phones, arrows from `sm` up. */}
         <div
           className="relative touch-pan-y overflow-hidden rounded-2xl border border-line bg-white"

@@ -17,12 +17,17 @@ export function ProductDetail({ product }: { product: Product }) {
 
   return (
     <div className="space-y-10">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12">
-        <div className="space-y-6">
+      {/* `grid-cols-1` = `minmax(0,1fr)` so items can shrink below their
+          min-content on phones (the tab buttons are `whitespace-nowrap`
+          and would otherwise force a 569px track and a sideways page). */}
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12">
+        <div className="min-w-0 space-y-6">
           <ProductGallery product={product} />
           <ProductTabs product={product} />
         </div>
-        <ProductBuyBox product={product} />
+        <div className="min-w-0">
+          <ProductBuyBox product={product} />
+        </div>
       </div>
     </div>
   );
