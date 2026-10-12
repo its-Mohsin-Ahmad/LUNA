@@ -7,10 +7,10 @@
 import { useEffect, type ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, LogOut, Store } from 'lucide-react';
+import { ArrowLeft, BadgeCheck, LogOut, Store } from 'lucide-react';
 import type { Role } from '@/lib/types';
 import { useAuth, useToast } from '@/lib/store';
-import { LogoStack } from '@/components/brand/Logo';
+import { Logo } from '@/components/brand/Logo';
 import { Skeleton } from '@/components/ui/feedback';
 import { cn } from '@/lib/utils';
 import type { DashTab } from './dashPrimitives';
@@ -21,6 +21,14 @@ const ROLE_LABEL: Record<Role, string> = {
   SALESMAN: 'Salesman',
   ADMIN: 'Administrator',
 };
+
+/** Two-letter avatar initials derived from a full name. */
+function initialsOf(name: string): string {
+  const parts = name.trim().split(/\s+/).filter(Boolean);
+  if (parts.length === 0) return 'U';
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+}
 
 export function DashboardShell({
   role,
@@ -74,17 +82,34 @@ export function DashboardShell({
     <div className="min-h-screen bg-warm">
       <div className="mx-auto flex max-w-[1400px] flex-col lg:flex-row">
         {/* Sidebar */}
-        <aside className="sticky top-0 z-40 flex shrink-0 flex-col bg-forest text-cream lg:min-h-screen lg:w-[248px]">
+        <aside className="sticky top-0 z-40 flex shrink-0 flex-col bg-gradient-to-b from-forest-700 via-forest to-forest-900 text-cream lg:min-h-screen lg:w-[264px]">
           <div
-            className="flex items-center justify-between gap-3 px-4 py-3 lg:px-5 lg:py-4"
+            className="relative flex items-center justify-between gap-3 px-4 py-3 lg:px-5 lg:py-5"
             style={{ paddingTop: 'calc(0.75rem + env(safe-area-inset-top))' }}
           >
-            <Link href="/" aria-label="Back to LUNA storefront">
-              <LogoStack className="h-7" />
-            </Link>
-            <span className="rounded-full bg-white/10 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em]">
+            <Logo tone="light" href="/" />
+            <span className="rounded-full bg-gold/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gold ring-1 ring-inset ring-gold/30">
               {ROLE_LABEL[role]}
             </span>
+          </div>
+
+          {/* User profile card — desktop */}
+          <div className="hidden px-3 lg:block">
+            <div className="flex items-center gap-3 rounded-xl bg-white/[0.06] p-3 ring-1 ring-inset ring-white/10">
+              <span
+                aria-hidden
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-gold to-[#c39f37] text-sm font-bold text-forest shadow-badge"
+              >
+                {initialsOf(user.name)}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="flex items-center gap-1">
+                  <span className="truncate text-[13.5px] font-bold text-cream">{user.name}</span>
+                  {user.verified && <BadgeCheck className="h-4 w-4 shrink-0 text-gold" aria-hidden />}
+                </span>
+                <span className="mt-0.5 block truncate text-[11.5px] text-cream/55">{user.email}</span>
+              </span>
+            </div>
           </div>
 
           <nav

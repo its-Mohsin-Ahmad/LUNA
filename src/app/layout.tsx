@@ -65,15 +65,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      <body>
-        <a
-          href="#main"
-          className="sr-only-focusable left-4 top-3 z-[200] rounded-md bg-forest px-4 py-2 text-sm font-semibold text-white"
-        >
-          Skip to content
-        </a>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }

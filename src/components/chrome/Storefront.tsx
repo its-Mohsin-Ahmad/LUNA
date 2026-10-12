@@ -19,10 +19,6 @@ function StorefrontFrame({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <a href="#main" className="sr-only-focusable">
-        Skip to content
-      </a>
-
       <Header onOpenCart={() => setCartOpen(true)} onOpenMobileNav={() => setNavOpen(true)} />
       <Navigation />
 
