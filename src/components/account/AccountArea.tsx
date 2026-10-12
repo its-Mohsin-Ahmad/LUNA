@@ -51,7 +51,7 @@ export function AccountArea({ initialTab = 'profile' }: { initialTab?: TabKey } 
 
   if (!user) {
     return (
-      <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]" aria-busy="true">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]" aria-busy="true">
         <Skeleton className="h-72 rounded-2xl" />
         <Skeleton className="h-96 rounded-2xl" />
       </div>
@@ -67,9 +67,9 @@ export function AccountArea({ initialTab = 'profile' }: { initialTab?: TabKey } 
   const active = TABS.find((t) => t.key === tab) ?? TABS[0];
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[260px_minmax(0,1fr)]">
       {/* Sidebar */}
-      <aside className="space-y-4">
+      <aside className="min-w-0 space-y-4">
         <div className="rounded-2xl border border-line bg-white p-5">
           <div className="flex items-center gap-3.5">
             <span className="grid h-12 w-12 shrink-0 overflow-hidden rounded-full bg-cream">
